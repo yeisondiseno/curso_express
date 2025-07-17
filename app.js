@@ -1,5 +1,6 @@
 // libraries
 import express from "express";
+import cors from "cors";
 // Config
 import { env } from "./config/index.js";
 // Constants
@@ -10,21 +11,38 @@ const app = express();
 app.disable("x-powered-by");
 
 // Middleware
-app.use((req, res, next) => {
-  // CORS Example
-  // res.header("Access-Control-Allow-Origin", "*"); // This is an example, adjust as needed
-  // Validate the origin against the accepted origins
-  const origin = req.headers.origin;
-  if (ACCEPTED_ORIGINS.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS" // Esto puede ir por petición según el endpoint
-    );
-  }
+app.use(express.json());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (ACCEPTED_ORIGINS.includes(origin)) {
+        return callback(null, origin);
+      }
 
-  next();
-});
+      if (!origin) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+  })
+);
+// app.use((req, res, next) => {
+//   // CORS Example
+//   // res.header("Access-Control-Allow-Origin", "*"); // This is an example, adjust as needed
+//   // Validate the origin against the accepted origins
+//   const origin = req.headers.origin;
+//   if (ACCEPTED_ORIGINS.includes(origin)) {
+//     res.setHeader("Access-Control-Allow-Origin", origin);
+//     res.setHeader(
+//       "Access-Control-Allow-Methods",
+//       "GET, POST, PUT, DELETE, OPTIONS" // Esto puede ir por petición según el endpoint
+//     );
+//   }
+
+//   next();
+// });
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
