@@ -8,7 +8,7 @@ const app = express();
 app.disable("x-powered-by");
 
 // Constants
-const allowedDomains = [
+const ACCEPTED_ORIGINS = [
   "http://localhost:5500",
   "http://localhost:8080",
   "http://127.0.0.1:5500",
@@ -18,12 +18,12 @@ const allowedDomains = [
 app.use((req, res, next) => {
   // CORS Example
   // res.header("Access-Control-Allow-Origin", "*"); // This is an example, adjust as needed
+  // Validate the origin against the accepted origins
   const origin = req.headers.origin;
-  if (allowedDomains.indexOf(origin) > -1) {
+  if (ACCEPTED_ORIGINS.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
-  console.log("Middleware executed: ---->");
   next();
 });
 
