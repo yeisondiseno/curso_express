@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Get Info from Localhost:3600</title>
+</head>
+
+<body>
+    <h1>Fetch Info from Localhost:3600</h1>
+    <button id="fetchBtn">Get Info</button>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('fetchBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('http://localhost:3600');
+                const data = await response.text();
+                document.getElementById('result').textContent = data;
+            } catch (error) {
+                document.getElementById('result').textContent = 'Error: ' + error;
+            }
+        });
+    </script>
+</body>
+
+</html>

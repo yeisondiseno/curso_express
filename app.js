@@ -7,8 +7,22 @@ import { env } from "./config/index.js";
 const app = express();
 app.disable("x-powered-by");
 
+// Constants
+const allowedDomains = [
+  "http://localhost:5500",
+  "http://localhost:8080",
+  "http://127.0.0.1:5500",
+];
+
 // Middleware
 app.use((req, res, next) => {
+  // CORS Example
+  // res.header("Access-Control-Allow-Origin", "*"); // This is an example, adjust as needed
+  const origin = req.headers.origin;
+  if (allowedDomains.indexOf(origin) > -1) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
   console.log("Middleware executed: ---->");
   next();
 });
