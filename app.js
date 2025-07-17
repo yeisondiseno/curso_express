@@ -2,17 +2,12 @@
 import express from "express";
 // Config
 import { env } from "./config/index.js";
+// Constants
+import { ACCEPTED_ORIGINS } from "./constants/index.js";
 
 // Configurations
 const app = express();
 app.disable("x-powered-by");
-
-// Constants
-const ACCEPTED_ORIGINS = [
-  "http://localhost:5500",
-  "http://localhost:8080",
-  "http://127.0.0.1:5500",
-];
 
 // Middleware
 app.use((req, res, next) => {
@@ -22,6 +17,10 @@ app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (ACCEPTED_ORIGINS.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, OPTIONS" // Esto puede ir por petición según el endpoint
+    );
   }
 
   next();
