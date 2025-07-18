@@ -4,9 +4,9 @@ import zod from "zod";
 const exampleSchema = zod.object({
   id: zod.string(),
   name: zod.string().min(2).max(100),
-  email: zod.string().email(),
+  email: zod.email(),
   age: zod.number().min(0).optional(),
-  poster: zod.string().url(),
+  poster: zod.url(),
 });
 
 export const validExampleSchema = (data) => exampleSchema.safeParse(data);
