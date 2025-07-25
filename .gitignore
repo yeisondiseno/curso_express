@@ -13,6 +13,9 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
+# BD 
+/BD
+
 # System files
 .DS_Store
 Thumbs.db
