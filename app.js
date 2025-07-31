@@ -1,3 +1,4 @@
+process.loadEnvFile();
 import app from "./src/index.js";
 // Config
 import { env } from "./src/config/index.js";

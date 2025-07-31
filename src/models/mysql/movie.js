@@ -47,15 +47,56 @@ export class MovieModel {
   }
 
   static async getById({ id }) {
-    return;
+    const [movies] = await connection.query(
+      "SELECT *, BIN_TO_UUID(id) id FROM movie WHERE id = UUID_TO_BIN(?)",
+      [id]
+    );
+
+    return movies[0];
   }
 
   static async create({ input }) {
-    return;
+    const { title, year, director, duration, poster, rate } = input;
+
+    const [uuidResult] = await connection.query("SELECT UUID() uuid;");
+    const [{ uuid }] = uuidResult;
+
+    try {
+      await connection.query(
+        "INSERT INTO movie (id, title, year, director, duration, poster, rate) VALUES (UUID_TO_BIN(?), ? ,? ,? ,? ,? ,?);",
+        [uuid, title, year, director, duration, poster, rate]
+      );
+    } catch (error) {
+      // This error is internal, not allow to user see this
+      console.log("error", error);
+    }
+
+    const [movies] = await connection.query(
+      "SELECT *, BIN_TO_UUID(id) id FROM movie WHERE id = UUID_TO_BIN(?)",
+      [uuid]
+    );
+
+    return movies[0];
   }
 
   static async delete({ id }) {
-    return true;
+    const [movies] = await connection.query(
+      "SELECT * FROM movie WHERE id = UUID_TO_BIN(?)",
+      [id]
+    );
+    if (!movies) return false;
+
+    try {
+      await connection.query("DELETE FROM movie WHERE id = UUID_TO_BIN(?);", [
+        id,
+      ]);
+
+      return true;
+    } catch (error) {
+      // This error is internal, not allow to user see this
+      console.log("error", error);
+      return false;
+    }
   }
 
   static async update({ id, input }) {

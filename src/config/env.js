@@ -1,3 +1,5 @@
+process.loadEnvFile();
+
 export const env = {
   PORT: process.env.PORT ?? 3600,
   DB_HOST: process.env.DB_HOST ?? "localhost",
