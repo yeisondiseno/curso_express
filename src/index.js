@@ -1,9 +1,11 @@
 // libraries
 import express from "express";
+// Models
+import { MovieModel } from "./models/mysql/movie.js";
 // Middleware
 import { corsMiddleware } from "./middleware/index.js";
 // Routes
-import { baseRouter, moviesRouter } from "./routes/index.js";
+import { baseRouter, createMovieRoutes } from "./routes/index.js";
 
 // Configurations
 const app = express();
@@ -15,7 +17,7 @@ app.use(corsMiddleware());
 
 // Routes
 app.use("/", baseRouter); // Simplify the route registration
-app.use("/movies", moviesRouter); // Register movies routes
+app.use("/movies", createMovieRoutes({ movieModel: MovieModel })); // Register movies routes
 
 app.use((req, res, next) => {
   res.status(404).send("<h1>404 Not Found</h1>");
